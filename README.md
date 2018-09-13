@@ -61,9 +61,6 @@ The lexical analyzer must use finite state machines to recognize tokens in the i
 ### Token Types
 You are to generate tokens from a text input stream for a subset of Datalog. The list of all token types that you will be expected to identify is below. You need to define the token types in your code.
 
-
-### Token Type, Description, Examples
-
 ##### COMMA
 The ',' character
 
