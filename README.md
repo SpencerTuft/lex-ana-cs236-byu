@@ -1,6 +1,45 @@
 lex-ana-cs236-byu
 -
 
+- [Before Starting](#before-starting)
+- [Description](#description)
+- [Token Types](#token-types)
+- [Token Type, Description, Examples](#token-type--description--examples)
+    + [COMMA](#comma)
+    + [PERIOD](#period)
+    + [Q_MARK](#q-mark)
+    + [LEFT_PAREN](#left-paren)
+    + [RIGHT_PAREN](#right-paren)
+    + [COLON](#colon)
+    + [COLON_DASH](#colon-dash)
+    + [MULTIPLY](#multiply)
+    + [ADD](#add)
+    + [SCHEMES](#schemes)
+    + [FACTS](#facts)
+    + [RULES](#rules)
+    + [QUERIES](#queries)
+    + [ID](#id)
+    + [STRING](#string)
+    + [COMMENT](#comment)
+    + [COMMENT](#comment-1)
+    + [WHITESPACE](#whitespace)
+    + [UNDEFINED](#undefined)
+    + [EOF](#eof)
+- [Output Format](#output-format)
+- [Example 1](#example-1)
+- [Example 2](#example-2)
+- [Example 3](#example-3)
+- [FAQ](#faq)
+    + [What is going on with EOF and multiple definitions?](#what-is-going-on-with-eof-and-multiple-definitions-)
+    + [What is an empty string, and how is it related to the escape sequence for an apostrophe?](#what-is-an-empty-string--and-how-is-it-related-to-the-escape-sequence-for-an-apostrophe-)
+    + [How do I implement an automaton in C++?](#how-do-i-implement-an-automaton-in-c---)
+    + [How do I handle DOS end-of-line (EOL) encoding?](#how-do-i-handle-dos-end-of-line--eol--encoding-)
+- [Submission](#submission)
+- [Pass-off](#pass-off)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
+
 ### Before Starting
 An objective of CS 236 is to help you write complex programs by using mathematical concepts as the basis for solving real world problems through computation. Mathematical thinking leads to programs that are clear, organized, and verifiably correct. This first project shows you how discrete math structures form the basis not only for writing the code, but for the code itself. It thus also provides a clear guide to maintaining and extending the code by any other programmer who also understands the discrete math structures.
 
