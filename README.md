@@ -4,7 +4,6 @@ lex-ana-cs236-byu
 - [Before Starting](#before-starting)
 - [Description](#description)
 - [Token Types](#token-types)
-- [Token Type, Description, Examples](#token-type--description--examples)
     + [COMMA](#comma)
     + [PERIOD](#period)
     + [Q_MARK](#q-mark)
