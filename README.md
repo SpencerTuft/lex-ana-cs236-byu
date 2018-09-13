@@ -29,10 +29,6 @@ lex-ana-cs236-byu
 - [Example 2](#example-2)
 - [Example 3](#example-3)
 - [FAQ](#faq)
-    + [What is going on with EOF and multiple definitions?](#what-is-going-on-with-eof-and-multiple-definitions-)
-    + [What is an empty string, and how is it related to the escape sequence for an apostrophe?](#what-is-an-empty-string--and-how-is-it-related-to-the-escape-sequence-for-an-apostrophe-)
-    + [How do I implement an automaton in C++?](#how-do-i-implement-an-automaton-in-c---)
-    + [How do I handle DOS end-of-line (EOL) encoding?](#how-do-i-handle-dos-end-of-line--eol--encoding-)
 - [Submission](#submission)
 - [Pass-off](#pass-off)
 
@@ -258,11 +254,11 @@ Total Tokens = 24
 ```
 
 ### FAQ
-##### What is going on with EOF and multiple definitions?
+#### What is going on with EOF and multiple definitions?
 
 Do not define objects, classes, enumerated types, constants, etc. named EOF. EOF is an existing macro in stdio to indicate end-of-file. If it is redefined, then all kinds of strange behavior ensues from compilation to run time errors. Use a different name for EOF when defining token types for this project (e.g., MYEOF).
 
-##### What is an empty string, and how is it related to the escape sequence for an apostrophe?
+#### What is an empty string, and how is it related to the escape sequence for an apostrophe?
 
 Consider the following input:
 
@@ -287,7 +283,7 @@ Any automaton, not just the string automaton, should read as many characters as 
 
 The third example is different. Here, the second single-quote was followed by a white-space, which the string automaton is not able to read at that point (the apostrophe escape sequence must not be separated by a space), so in this case, it reads the empty string.
 
-##### How do I implement an automaton in C++?
+#### How do I implement an automaton in C++?
 
 The most direct solution is to use methods. For example, consider an automaton to detect the string “hi”.
 ```
@@ -305,7 +301,7 @@ bool i() {
 ```
 In this example, s.getChar() returns the next character in the input. This behavior is not part of some standard library; it is just pseudo-code to use in this example.
 
-##### How do I handle DOS end-of-line (EOL) encoding?
+#### How do I handle DOS end-of-line (EOL) encoding?
 
 DOS encodes EOL as '\r' followed by '\n'. The '\r' means carriage return. What happens when you output that to the console is that the cursor moves to the beginning of the line and starts output at that spot. If you develop in Windows, then any test file you create will have DOS EOL encoding. It doesn't matter for WHITESPACE since '\r' is considered WHITESPACE; however, it most likely will affect the LINECOMMENT machine. Most likely, the machine is designed to end comments with the '\n' character, which means the machine will include the '\r' character as part of the line comment. When the machine goes to output the string for the LINECOMMENT token to the console, it will move to the beginning of the line and begin overwriting the text. Here is an example of what that looks like.
 
