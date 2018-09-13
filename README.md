@@ -1,6 +1,7 @@
 lex-ana-cs236-byu
 -
 
+### Table of Contents
 - [Before Starting](#before-starting)
 - [Description](#description)
 - [Token Types](#token-types)
