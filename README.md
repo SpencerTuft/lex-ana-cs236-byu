@@ -37,8 +37,6 @@ lex-ana-cs236-byu
 - [Submission](#submission)
 - [Pass-off](#pass-off)
 
-<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
-
 
 ### Before Starting
 An objective of CS 236 is to help you write complex programs by using mathematical concepts as the basis for solving real world problems through computation. Mathematical thinking leads to programs that are clear, organized, and verifiably correct. This first project shows you how discrete math structures form the basis not only for writing the code, but for the code itself. It thus also provides a clear guide to maintaining and extending the code by any other programmer who also understands the discrete math structures.
