@@ -1,9 +1,9 @@
-cmake_minimum_required(VERSION 3.7)
+cmake_minimum_required(VERSION 3.8)
 project(lex-ana-cs236-byu)
 
 include_directories(include)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 
-file(GLOB SOURCES "*.cpp" "*.h")
-add_executable(lex-ana-cs236-byu ${SOURCES})
+file(GLOB SOURCES "./src/*.cpp" "./src/*.h")
+add_executable(lex-ana-cs236-byu ${SOURCES} src/Token.h src/Lexer.cpp src/Lexer.h)
