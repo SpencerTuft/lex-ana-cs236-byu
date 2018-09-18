@@ -1,4 +1,3 @@
-#include <fstream>
 #include <iostream>
 #include <vector>
 
@@ -13,20 +12,7 @@ using namespace std;
  * @return
  */
 int main(int argc, const char **argv) {
-  const string inputFile = argv[1];
-  ifstream ifs(inputFile.c_str());
-
-  vector<char> input;
-  char c;
-
-  // Store characters in memory
-  while (!ifs.eof()) {
-    ifs.get(c);
-    input.push_back(c);
-  }
-  ifs.close();
-
-  const Lexer lexer(input);
+  const string inputFileName = string(argv[1]);
 
   return 0;
 }

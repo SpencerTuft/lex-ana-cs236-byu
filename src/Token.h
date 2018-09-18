@@ -6,35 +6,20 @@
 #define LEX_ANA_CS236_BYU_TOKEN_H
 
 #include <string>
+
 using namespace std;
 
 class Token {
  private:
-  int character; // the starting character number
   int line; // the token starting line number
   string type; // the token type
-  string value; // the value of the token
+  string value ; // the value of the token
  public:
-  Token(const int c, const int l, const string &t, const string &v) {
-    character = c;
-    line = l;
-    type = t;
-    value = v;
-  };
-  ~Token() = default;
+  Token(int l, string &t, string &v): line(l), type(t), value(v) {};
 
-  int getCharacter() {
-    return character;
-  };
-  int getLine() {
-    return line;
-  };
-  string getValue() {
-    return type;
-  };
-  string getType() {
-    return value;
-  };
+  string toString() {
+    return "(" + type + "," + value + "," + to_string(line) + ")";
+  }
 };
 
 #endif //LEX_ANA_CS236_BYU_TOKEN_H

@@ -6,23 +6,20 @@
 #define LEX_ANA_CS236_BYU_TOKENIZER_H
 
 #include <vector>
-#include <fstream>
-#include <iostream>
-#include "./Token.h"
+#include "Token.h"
+#include "./InputStream.h"
 
 using namespace std;
 
 class Lexer {
  private:
+  InputStream inputStream;
   vector<Token> tokens;
 
  public:
-  Lexer(vector<char>& input){
-    for (int i = 0; i < input.size(); i++){
+  Lexer(string& fileName): inputStream(fileName){
 
-    }
   }
-  ~Lexer() = default;
 };
 
 #endif //LEX_ANA_CS236_BYU_TOKENIZER_H
