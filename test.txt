@@ -1,0 +1,5 @@
+This is a random
+test file that
+I am putting together
+to test my InputStream
+class.

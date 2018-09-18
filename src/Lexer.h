@@ -6,6 +6,7 @@
 #define LEX_ANA_CS236_BYU_TOKENIZER_H
 
 #include <vector>
+#include <iostream>
 #include "Token.h"
 #include "./InputStream.h"
 
@@ -17,8 +18,8 @@ class Lexer {
   vector<Token> tokens;
 
  public:
-  Lexer(string& fileName): inputStream(fileName){
-
+  explicit Lexer(string& fileName): inputStream(fileName){
+    cout << "Created new Lexer" << endl;
   }
 };
 

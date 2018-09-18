@@ -6,26 +6,30 @@
 #define LEX_ANA_CS236_BYU_INPUTSTREAM_H
 
 #include <fstream>
+#include <iostream>
 #include <string>
 
 using namespace std;
 
 class InputStream {
  private:
-  string str;
+  string str = "";
   int currentLineNum = 1;
-  int charLoc;
+  int charLoc = 0;
  public:
-  InputStream(string& fileName) {
+  explicit InputStream(string& fileName) {
     ifstream ifs(fileName);
+    if (ifs.is_open()) {
+      while (!ifs.eof()) {
+        char c;
+        ifs.get(c);
+        str.push_back(c);
+      }
 
-    while (!ifs.eof()) {
-      char c;
-      ifs.get(c);
-      str.push_back(c);
+      ifs.close();
+    } else {
+      cout << "File not found" << endl;
     }
-
-    ifs.close();
   }
   char currentChar();
   void forward();

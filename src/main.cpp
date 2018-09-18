@@ -12,7 +12,8 @@ using namespace std;
  * @return
  */
 int main(int argc, const char **argv) {
-  const string inputFileName = string(argv[1]);
+  string inputFileName = string(argv[1]);
+  Lexer lexer(inputFileName);
 
   return 0;
 }
