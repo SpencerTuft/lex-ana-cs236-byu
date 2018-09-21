@@ -2,8 +2,8 @@
 #include <vector>
 
 #include "Lexer.h"
-
-using namespace std;
+#include "Lexeme.h"
+#include "DataLog.h"
 
 /**
  * Main process
@@ -13,7 +13,11 @@ using namespace std;
  */
 int main(int argc, const char **argv) {
   string inputFileName = string(argv[1]);
-  Lexer lexer(inputFileName);
-
+  const vector<Lexeme> language{
+      Lexeme("IDENTIFIER", "^[a-zA-Z]$",
+             new Lexeme("IDENTIFIER", "^[a-zA-Z][a-zA-Z0-9]*", nullptr, handleIdentifier),
+             handleIdentifier)
+  };
+  Lexer lexer(inputFileName, language);
   return 0;
 }

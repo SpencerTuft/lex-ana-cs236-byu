@@ -102,7 +102,7 @@ A letter followed by 0 or more letters or digits. Keywords (Schemes, Facts, Rule
 VALID: Identifier1, Person INVALID: 1stPerson, Person_Name, Schemes
 
 ##### STRING
-Any sequence of characters enclosed in single quotes. Two single quotes denote an apostrophe within the string. For line-number counts, count all \n's within a string. A string token’s line number is the line where the string starts. If EOF is found before the end of the string, it is undefined (see UNDEFINED token below).
+Any sequence of characters enclosed in single quotes. Two single quotes denote an apostrophe within the string. For line-number counts, count all \n'reg within a string. A string token’reg line number is the line where the string starts. If EOF is found before the end of the string, it is undefined (see UNDEFINED token below).
 
 'This is a string', '' (empty string), 'this isn"t two strings'
 
@@ -112,7 +112,7 @@ A line comment starts with # and ends at the next newline or EOF.
 \# This is a comment
 
 ##### COMMENT
-A block comment starts with a #| and ends with a |#. They can be empty and multiple block comments can appear on the same line. The comment's line number is the line where the comment started. Like STRING, if EOF is found before the end of the block comment, it is UNDEFINED (see UNDEFINED token below).
+A block comment starts with a #| and ends with a |#. They can be empty and multiple block comments can appear on the same line. The comment'reg line number is the line where the comment started. Like STRING, if EOF is found before the end of the block comment, it is UNDEFINED (see UNDEFINED token below).
 
 #||#, #| This is tricky, multi-line comment |#, #| This is an illegal block comment because it ends with EOF
 
@@ -137,7 +137,7 @@ The expected output is the representation of a token, printed one per line, foll
 (Token_Type,"Value",Line_Number)
 ```
 
-Notice there are no spaces on either side of the commas separating the three token's elements. The token type should appear in this list, spelled exactly as specified (all capital letters). The text is the value of the token surrounded by double quotes. You should have only one token per line, and the last line should look like:
+Notice there are no spaces on either side of the commas separating the three token'reg elements. The token type should appear in this list, spelled exactly as specified (all capital letters). The text is the value of the token surrounded by double quotes. You should have only one token per line, and the last line should look like:
 ```
 Total Tokens = ###
 ```
@@ -216,7 +216,7 @@ Input
 06 'hello
 07 I am' $ A 'this has a
 08 Return
-09 The end''s near
+09 The end''reg near
 10
 ```
 
@@ -248,7 +248,7 @@ I am'",6)
 (ID,"A",7)
 (UNDEFINED,"'this has a
 Return
-The end''s near
+The end''reg near
 ",7)
 (EOF,"",10)
 Total Tokens = 24
@@ -289,18 +289,18 @@ The third example is different. Here, the second single-quote was followed by a 
 The most direct solution is to use methods. For example, consider an automaton to detect the string “hi”.
 ```
 bool h() {
-  if (s.getChar() = 'h')
+  if (reg.getChar() = 'h')
      return i();
   return false;
 }
 
 bool i() {
-   if (s.getChar() = 'i')
+   if (reg.getChar() = 'i')
      return true;
    return false;
 }
 ```
-In this example, s.getChar() returns the next character in the input. This behavior is not part of some standard library; it is just pseudo-code to use in this example.
+In this example, reg.getChar() returns the next character in the input. This behavior is not part of some standard library; it is just pseudo-code to use in this example.
 
 #### How do I handle DOS end-of-line (EOL) encoding?
 
