@@ -1,3 +1,5 @@
+#include <utility>
+
 //
 // Created by Spencer Tuft on 9/13/18.
 //
@@ -7,18 +9,52 @@
 
 #include <string>
 
-using namespace std;
-
 class Token {
  private:
-  int line; // the token starting line number
-  string type; // the token type
-  string value ; // the value of the token
+  std::string t = ""; // the token type
+  std::string v = ""; // the value of the token
+  int l = 0; // the token starting line number
  public:
-  Token(int l, string &t, string &v): line(l), type(t), value(v) {};
+  Token() = default;
+  Token(int lineNumber)
+      : l(lineNumber) {}
+  Token(std::string &type, char &input)
+      : t(type) {
+    this->addValue(input);
+  };
+  Token(std::string &type, std::string &input)
+      : t(type) {
+    v = input;
+  };
+  Token(std::string &type, char &input, int line)
+      : t(type), l(line) {
+    this->addValue(input);
+  };
+  Token(std::string &type, std::string &input, int line)
+      : t(type), l(line) {
+    v = input;
+  };
 
-  string toString() {
-    return "(" + type + "," + value + "," + to_string(line) + ")";
+  void setLine(int lineNumber) {
+    l = lineNumber;
+  }
+  void setType(std::string type) {
+    t = type;
+  }
+  void addValue(char input) {
+    v.push_back(input);
+  }
+  void setValue(char input) {
+    v = input;
+  }
+  void setValue(std::string input) {
+    v = input;
+  }
+  std::string getValue() const {
+    return v;
+  }
+  std::string toString() const {
+    return "(" + t + ",\"" + v + "\"," + std::to_string(l) + ")";
   }
 };
 

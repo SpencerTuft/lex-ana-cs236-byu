@@ -3,8 +3,8 @@
 //
 
 #include "InputStream.h"
-InputStream::InputStream(string &fileName) {
-  ifstream ifs(fileName);
+InputStream::InputStream(std::string &fileName) {
+  std::ifstream ifs(fileName);
   if (ifs.is_open()) {
     while (!ifs.eof()) {
       char c;
@@ -15,19 +15,27 @@ InputStream::InputStream(string &fileName) {
     ifs.close();
     str.push_back(-1);
   } else {
-    cout << "File not found" << endl;
+    std::cout << "File not found" << std::endl;
   }
 }
-char InputStream::currentChar() {
+char InputStream::currentChar() const {
   return str[charLoc];
+}
+char InputStream::nextChar() const {
+  return str[charLoc+1];
 }
 void InputStream::forward() {
   int next = charLoc++;
   if (str[next] == '\n') currentLineNum++;
 }
-int InputStream::currentLine() {
+void InputStream::forward(int num) {
+  for (int i = 0; i < num; i ++) {
+    forward();
+  }
+}
+int InputStream::currentLine() const {
   return currentLineNum;
 }
-string InputStream::toString() {
+std::string InputStream::toString() const {
   return str;
 }

@@ -8,14 +8,15 @@
 #include <regex>
 #include <string>
 #include <iostream>
+#include "../src/Token.h"
 
 class Lexeme {
  private:
   std::string id;
   std::regex reg;
   Lexeme *n;
-  void (&t)(int &state);
-  static void defFunc(int &state) {
+  void (&t)(int &state, std::string &value, std::vector<Token> &tokens);
+  static void defFunc(int &state, std::string &value, std::vector<Token> &tokens) {
     std::cout << "Invoked Lexeme default transition function" << std::endl;
   }
 
@@ -28,15 +29,18 @@ class Lexeme {
       : id(identifier), reg(std::regex(expression)), n(next), t(defFunc) {
     std::cout << "Invoked chain Lexeme constructor" << std::endl;
   };
-  Lexeme(std::string identifier, std::string expression, Lexeme *next, void(&transition)(int &state))
+  Lexeme(std::string identifier, std::string expression, Lexeme *next, void (&transition)(int &state, std::string &value, std::vector<Token> &tokens))
       : id(identifier), reg(std::regex(expression)), n(next), t(transition) {
     std::cout << "Invoked chain-transition Lexeme constructor" << std::endl;
   };
-  void process(int &state, std::string &value) {
-    this->t(state);
+  void process(int &state, std::string &value, std::vector<Token> &tokens) {
+    this->t(state, value, tokens);
   }
   bool match(std::string &value) const {
     return std::regex_match(value, reg);
+  }
+  std::string getId() const {
+    return id;
   }
 };
 

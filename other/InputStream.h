@@ -9,22 +9,21 @@
 #include <iostream>
 #include <string>
 
+using namespace std;
 
 class InputStream {
  private:
-  std::string str = "";
+  string str = "";
   int currentLineNum = 1;
   int charLoc = 0;
  public:
   InputStream() = default;
   ~InputStream() = default;
-  explicit InputStream(std::string& fileName);
-  char currentChar() const;
-  char nextChar() const;
+  explicit InputStream(string& fileName);
+  char currentChar();
   void forward();
-  void forward(int num);
-  int currentLine() const;
-  std::string toString() const;
+  int currentLine();
+  string toString();
 };
 
 #endif //LEX_ANA_CS236_BYU_INPUTSTREAM_H

@@ -10,19 +10,17 @@
 #include <iostream>
 
 #include "Token.h"
-#include "State.h"
 #include "InputStream.h"
+#include "Lexeme.h"
 
 class Lexer {
  private:
-  std::string currentState = "START";
+  int state = 0;
   InputStream inputStream;
-  Token tcurrent;
-  std::vector<Token> tokens;
+  vector<Token> tokens;
 
  public:
-  explicit Lexer(std::string& fileName, std::vector<State> states);
-  std::string toString();
+  explicit Lexer(std::string& fileName, const std::vector<Lexeme>& words);
 };
 
 #endif //LEX_ANA_CS236_BYU_Lexer_H

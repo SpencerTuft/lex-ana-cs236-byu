@@ -2,7 +2,7 @@
 #include <vector>
 
 #include "Lexer.h"
-#include "Lexeme.h"
+#include "State.h"
 #include "DataLog.h"
 
 /**
@@ -12,12 +12,16 @@
  * @return
  */
 int main(int argc, const char **argv) {
-  string inputFileName = string(argv[1]);
-  const vector<Lexeme> language{
-      Lexeme("IDENTIFIER", "^[a-zA-Z]$",
-             new Lexeme("IDENTIFIER", "^[a-zA-Z][a-zA-Z0-9]*", nullptr, handleIdentifier),
-             handleIdentifier)
+  std::string inputFileName = std::string(argv[1]);
+  const std::vector<State> states {
+    State("START", fstart),
+    State("COLON", fcolon),
+    State("COMMA", fcomma),
+    State("PERIOD", fperiod),
+    State("STRING", fstring),
+    State("IDENTIFIER", fidentifier)
   };
-  Lexer lexer(inputFileName, language);
+  Lexer lexer(inputFileName, states);
+  std::cout << "Token List:" << std::endl << lexer.toString();
   return 0;
 }
