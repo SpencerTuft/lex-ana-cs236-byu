@@ -10,36 +10,31 @@
 #include "State.h"
 #include "Token.h"
 
-Lexer::Lexer(std::string &fileName, std::vector<State> states) : inputStream(fileName), tcurrent() {
-  std::string value;
+Lexer::Lexer(std::string &fileName, std::vector<State> states)
+    : inputStream(fileName), tcurrent(inputStream.currentLine()) {
+  // Loop through the characters one by one till the end of the file character
+  while (inputStream.currentChar() != -1) {
 
-  // Loop through the characters one by one till the end of the file
-  while(inputStream.currentChar() != -1) {
-    // Find the current state definition
-    bool stateFound = false;
-    for (auto &state : states) {
-      if (currentState == state.getId()) {
-        stateFound = true;
-        state.process(&inputStream, &tcurrent, currentState);
-        if (currentState == "START") {
-          tokens.push_back(tcurrent);
-          tcurrent = Token(inputStream.currentLine());
+    for (auto &state : states) { // Search for the current state definition
+      if (currentState == state.getId()) { // If state definition found
+        tcurrent.setLine(inputStream.currentLine()); // Set the line number where the token starts
+
+        // Run the process associated with this state
+        bool createToken = state.process(&inputStream, &tcurrent, currentState);
+        if (createToken) {
+          currentState = "START"; // Reset to start state
+          tokens.push_back(tcurrent); // Store token in the tokens list
+          tcurrent = Token(); // Reset the current token
         }
+        break; // After state is found, no need to loop through anymore states.
       }
     }
-
-    // Check against non-implemented states
-    if (stateFound) {
-      std::cout << "Found state for " << currentState << " in your grammar" << std::endl;
-    } else {
-      std::cout << "Missing state for " << currentState << " in your grammar" << std::endl;
-    }
-
-    // Increment to the next character in the stream
-    inputStream.forward();
   }
 
-  std::cout << std::endl << "Done." << std::endl;
+  // End of file ritual
+  // TODO - FIX the EOF line number (it's always +1)
+  tcurrent.set("EOF", "", inputStream.currentLine());
+  tokens.push_back(tcurrent);
 }
 
 std::string Lexer::toString() {
@@ -48,10 +43,10 @@ std::string Lexer::toString() {
 
   for (int i = 0; i < listLength; i++) {
     ss << tokens[i].toString();
-    if (i != listLength - 1) {
-      ss << std::endl;
-    }
+    ss << std::endl;
   }
+
+  ss << "Total Tokens = " << tokens.size() << std::endl;
 
   return ss.str();
 }

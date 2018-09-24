@@ -20,6 +20,7 @@ int main(int argc, const char **argv) {
     State("PERIOD", fperiod),
     State("STRING", fstring),
     State("IDENTIFIER", fidentifier)
+//    State("COMMENT", fcomment)
   };
   Lexer lexer(inputFileName, states);
   std::cout << "Token List:" << std::endl << lexer.toString();

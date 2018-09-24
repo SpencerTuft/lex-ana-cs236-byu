@@ -35,21 +35,43 @@ class Token {
     v = input;
   };
 
+  // ************ SETTERS ************
   void setLine(int lineNumber) {
     l = lineNumber;
   }
   void setType(std::string type) {
     t = type;
   }
-  void addValue(char input) {
-    v.push_back(input);
+  void addValue(char value) {
+    v.push_back(value);
   }
-  void setValue(char input) {
-    v = input;
+  void setValue(char value) {
+    v = value;
   }
-  void setValue(std::string input) {
-    v = input;
+  void setValue(std::string value) {
+    v = value;
   }
+
+  void set(std::string type, std::string value) {
+    setType(type);
+    setValue(value);
+  }
+  void set(std::string type, char value) {
+    setType(type);
+    setValue(value);
+  }
+  void set(std::string type, std::string value, int lineNumber) {
+    setType(type);
+    setValue(value);
+    setLine(lineNumber);
+  }
+  void set(std::string type, char value, int lineNumber) {
+    setType(type);
+    setValue(value);
+    setLine(lineNumber);
+  }
+
+  // ************ GETTERS ************
   std::string getValue() const {
     return v;
   }

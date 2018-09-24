@@ -1,8 +1,6 @@
 .
 ,
-'a string'
-''
-'Spencer''s house'
+'a string with an apostrophe: '''
 #A comment
 Schemes
 FactsRules

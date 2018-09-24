@@ -11,11 +11,15 @@
 #include "InputStream.h"
 #include <regex>
 
-void fstart(InputStream* inputStream, Token* currentToken, std::string &currentState) {
+bool fstart(InputStream* inputStream, Token* currentToken, std::string &currentState) {
   char currentChar = inputStream->currentChar();
 
-  // Check for colon
-  if (currentChar == ':') {
+  // Check for whitespace
+  if (isspace(currentChar)) {
+    inputStream->forward();
+
+    // Check for colon
+  } else if (currentChar == ':') {
     currentState = "COLON";
 
     // Check for letter
@@ -34,54 +38,66 @@ void fstart(InputStream* inputStream, Token* currentToken, std::string &currentS
   } else if (currentChar == '\'') {
     currentState = "STRING";
 
+    // Check for end of file
+  } else if (currentChar == -1) {
+    currentState = "EOF";
+
     // Check for incompleteness
   } else {
     std::cout << "ERROR: Unrecognized symbol [" << currentChar << "]" << std::endl;
-  }
-}
-
-void fcolon(InputStream* inputStream, Token* currentToken, std::string &currentState) {
-  if (inputStream->nextChar() != '-') {
-    currentToken->setValue(":-");
-    currentToken->setType("COLON_DASH");
-    currentState = "START";
-    inputStream->forward(2);
-  } else {
-    currentToken->setType("COLON");
-    currentToken->setValue(':');
-    currentState = "START";
     inputStream->forward();
   }
+  return false;
 }
 
-void fperiod(InputStream* inputStream, Token* currentToken, std::string &currentState) {
-  currentToken->setValue('.');
-  currentToken->setType("PERIOD");
-  currentState = "START";
+bool fcolon(InputStream* inputStream, Token* currentToken, std::string &currentState) {
+  if (inputStream->nextChar() == '-') {
+    currentToken->set("COLON_DASH", ":-");
+    inputStream->forward(2);
+  } else {
+    currentToken->set("COLON", ":");
+    inputStream->forward();
+  }
+  return true;
+}
+
+bool fperiod(InputStream* inputStream, Token* currentToken, std::string &currentState) {
+  currentToken->set("PERIOD", ".");
   inputStream->forward();
+  return true;
 }
 
-void fcomma(InputStream* inputStream, Token* currentToken, std::string &currentState) {
-  currentToken->setValue(',');
-  currentToken->setType("COMMA");
-  currentState = "START";
+bool fcomma(InputStream* inputStream, Token* currentToken, std::string &currentState) {
+  currentToken->set("COMMA", ",");
   inputStream->forward();
+  return true;
 }
 
-void fstring(InputStream* inputStream, Token* currentToken, std::string &currentState) {
+bool fstring(InputStream* inputStream, Token* currentToken, std::string &currentState) {
   // Current token is a quote
+  char quote = '\'';
   currentToken->addValue(inputStream->currentChar());
   inputStream->forward();
 
-  while(inputStream->currentChar() != '\'') {
-
+  while(true) {
+    if (inputStream->currentChar() == quote && inputStream->nextChar() == quote) {
+      currentToken->addValue(quote);
+      inputStream->forward(2);
+    } else if (inputStream->currentChar() == quote){
+      currentToken->addValue(inputStream->currentChar());
+      inputStream->forward();
+      break;
+    } else {
+      currentToken->addValue(inputStream->currentChar());
+      inputStream->forward();
+    }
   }
 
   currentToken->setType("STRING");
-  currentState = "START";
+  return true;
 }
 
-void fidentifier(InputStream* inputStream, Token* currentToken, std::string &currentState) {
+bool fidentifier(InputStream* inputStream, Token* currentToken, std::string &currentState) {
   // Set identifier state
   currentToken->setType("ID");
 
@@ -102,9 +118,6 @@ void fidentifier(InputStream* inputStream, Token* currentToken, std::string &cur
   } else if (value == "Queries") {
     currentToken->setType("QUERIES");
   }
-
-  // Return to start state and advance inputStream
-  currentState = "START";
+  return true;
 }
-
 #endif //LEX_ANA_CS236_BYU_DATALOG_H

@@ -5,5 +5,5 @@
 //
 
 #include "State.h"
-State::State(std::string identifier, void (&transition)(InputStream* inputStream, Token *token, std::string &state))
+State::State(std::string identifier, bool (&transition)(InputStream* inputStream, Token *token, std::string &state))
     : id(std::move(identifier)), f(transition) {}

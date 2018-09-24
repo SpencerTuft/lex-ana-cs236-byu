@@ -25,8 +25,10 @@ char InputStream::nextChar() const {
   return str[charLoc+1];
 }
 void InputStream::forward() {
-  int next = charLoc++;
-  if (str[next] == '\n') currentLineNum++;
+  charLoc++;
+  if (str[charLoc] == '\n') {
+    currentLineNum++;
+  }
 }
 void InputStream::forward(int num) {
   for (int i = 0; i < num; i ++) {
