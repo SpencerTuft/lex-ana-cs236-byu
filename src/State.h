@@ -12,12 +12,12 @@
 class State {
  private:
   std::string id;
-  bool (&f)(InputStream *inputStream, Token *token, std::string &state);
+  bool (&f)(InputStream &inputStream, Token &token, std::string &state);
 
  public:
-  State(std::string identifier, bool (&transition)(InputStream* inputStream, Token *token, std::string &state));
+  State(std::string identifier, bool (&transition)(InputStream &inputStream, Token &token, std::string &state));
 
-  bool process(InputStream *inputStream, Token *currentToken, std::string &currentState) {
+  bool process(InputStream &inputStream, Token &currentToken, std::string &currentState) {
     return this->f(inputStream, currentToken, currentState);
   }
 

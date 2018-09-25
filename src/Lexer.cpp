@@ -18,7 +18,7 @@ Lexer::Lexer(std::string &fileName, std::vector<State> states)
     for (auto &state : states) { // Search for the current state definition
       if (currentState == state.getId()) { // If state definition found
         // Run the function associated with this state
-        bool createToken = state.process(&inputStream, &tcurrent, currentState);
+        bool createToken = state.process(inputStream, tcurrent, currentState);
         if (createToken) {
           currentState = "START"; // Reset to start state
           tokens.push_back(tcurrent); // Store token in the tokens list
