@@ -11,7 +11,9 @@
 #include "InputStream.h"
 #include <regex>
 
-bool fstart(InputStream* inputStream, Token* currentToken, std::string &currentState) {
+bool fstart(InputStream *inputStream, Token *currentToken, std::string &currentState) {
+  currentToken->setLine(inputStream->currentLine()); // Set line at the beginning of every new token
+
   char currentChar = inputStream->currentChar();
 
   // Check for whitespace
@@ -34,23 +36,38 @@ bool fstart(InputStream* inputStream, Token* currentToken, std::string &currentS
   } else if (currentChar == ',') {
     currentState = "COMMA";
 
+    // Check for question mark
+  } else if (currentChar == '?') {
+    currentState = "Q_MARK";
+
+    // Check for multiplication
+  } else if (currentChar == '*') {
+    currentState = "MULTIPLY";
+
+    // Check for addition
+  } else if (currentChar == '+') {
+    currentState = "ADD";
+
     // Check for string
   } else if (currentChar == '\'') {
     currentState = "STRING";
 
-    // Check for end of file
-  } else if (currentChar == -1) {
-    currentState = "EOF";
+    // Check for comment
+  } else if (currentChar == '#') {
+    currentState = "COMMENT";
 
-    // Check for incompleteness
+    // Check for parenthesis
+  } else if (currentChar == '(' || currentChar == ')') {
+    currentState = "PAREN";
+
+    // Check for undefined
   } else {
-    std::cout << "ERROR: Unrecognized symbol [" << currentChar << "]" << std::endl;
-    inputStream->forward();
+    currentState = "UNDEFINED";
   }
   return false;
 }
 
-bool fcolon(InputStream* inputStream, Token* currentToken, std::string &currentState) {
+bool fcolon(InputStream *inputStream, Token *currentToken, std::string &currentState) {
   if (inputStream->nextChar() == '-') {
     currentToken->set("COLON_DASH", ":-");
     inputStream->forward(2);
@@ -61,43 +78,73 @@ bool fcolon(InputStream* inputStream, Token* currentToken, std::string &currentS
   return true;
 }
 
-bool fperiod(InputStream* inputStream, Token* currentToken, std::string &currentState) {
+bool fperiod(InputStream *inputStream, Token *currentToken, std::string &currentState) {
   currentToken->set("PERIOD", ".");
   inputStream->forward();
   return true;
 }
 
-bool fcomma(InputStream* inputStream, Token* currentToken, std::string &currentState) {
+bool fcomma(InputStream *inputStream, Token *currentToken, std::string &currentState) {
   currentToken->set("COMMA", ",");
   inputStream->forward();
   return true;
 }
 
-bool fstring(InputStream* inputStream, Token* currentToken, std::string &currentState) {
-  // Current token is a quote
-  char quote = '\'';
-  currentToken->addValue(inputStream->currentChar());
+bool fqmark(InputStream *inputStream, Token *currentToken, std::string &currentState) {
+  currentToken->set("Q_MARK", "?");
   inputStream->forward();
-
-  while(true) {
-    if (inputStream->currentChar() == quote && inputStream->nextChar() == quote) {
-      currentToken->addValue(quote);
-      inputStream->forward(2);
-    } else if (inputStream->currentChar() == quote){
-      currentToken->addValue(inputStream->currentChar());
-      inputStream->forward();
-      break;
-    } else {
-      currentToken->addValue(inputStream->currentChar());
-      inputStream->forward();
-    }
-  }
-
-  currentToken->setType("STRING");
   return true;
 }
 
-bool fidentifier(InputStream* inputStream, Token* currentToken, std::string &currentState) {
+bool fmultiply(InputStream *inputStream, Token *currentToken, std::string &currentState) {
+  currentToken->set("MULTIPLY", "*");
+  inputStream->forward();
+  return true;
+}
+
+bool fadd(InputStream *inputStream, Token *currentToken, std::string &currentState) {
+  currentToken->set("ADD", "+");
+  inputStream->forward();
+  return true;
+}
+
+bool fstring(InputStream *inputStream, Token *currentToken, std::string &currentState) {
+  char quote = '\'';
+
+  // Current token is a quote
+  currentToken->setType("STRING");
+  currentToken->addValue(inputStream->currentChar());
+  inputStream->forward();
+
+  while (inputStream->currentChar() != quote) {
+    if (inputStream->currentChar() == -1) {
+      currentToken->setType("UNDEFINED");
+      return true;
+    }
+    currentToken->addValue(inputStream->currentChar());
+    inputStream->forward();
+  }
+
+  currentToken->addValue(inputStream->currentChar());
+  inputStream->forward();
+  currentState = "POSSIBLE_STRING_END";
+  return false;
+}
+
+bool fpstring(InputStream *inputStream, Token *currentToken, std::string &currentState) {
+  char quote = '\'';
+  if (inputStream->currentChar() == quote) { // Found an apostrophe
+    currentToken->addValue(quote); // Add a second quote to denote an apostrophe
+    inputStream->forward();
+    currentState = "STRING"; // Back to the string state
+    return false; // Continue without creating string token
+  } else { // Found string end
+    currentState = "START"; // Will return to starting state
+    return true; // new string token will be created
+  }
+}
+
+bool fidentifier(InputStream *inputStream, Token *currentToken, std::string &currentState) {
   // Set identifier state
   currentToken->setType("ID");
 
@@ -105,7 +152,7 @@ bool fidentifier(InputStream* inputStream, Token* currentToken, std::string &cur
   do {
     currentToken->addValue(inputStream->currentChar());
     inputStream->forward();
-  } while(std::regex_match(std::string(1, inputStream->currentChar()), std::regex("^[a-zA-Z0-9]$")));
+  } while (std::regex_match(std::string(1, inputStream->currentChar()), std::regex("^[a-zA-Z0-9]$")));
 
   // Check if identifier is a special identifier
   std::string value = currentToken->getValue();
@@ -120,4 +167,61 @@ bool fidentifier(InputStream* inputStream, Token* currentToken, std::string &cur
   }
   return true;
 }
+
+bool fcomment(InputStream *inputStream, Token *currentToken, std::string &currentState) {
+  char bar = '|';
+  char hash = '#';
+  std::string barhash = "|#";
+  char newline = '\n';
+  char end = -1;
+
+  // Beginning of comment ritual
+  currentToken->addValue(hash);
+  inputStream->forward();
+
+  if (inputStream->currentChar() != bar) { // Is single-line comment
+    while (inputStream->currentChar() != newline && inputStream->currentChar() != end) { // Check for end of line or file
+      currentToken->addValue(inputStream->currentChar());
+      inputStream->forward();
+    }
+  } else { // Is multi-line comment
+    currentToken->addValue(bar); // Add bar symbol to value
+    inputStream->forward();
+
+    while (!(inputStream->currentChar() == bar && inputStream->nextChar() == hash)) {
+      // Check for end of file
+      if (inputStream->currentChar() == end) {
+        currentToken->setType("UNDEFINED");
+        return true;
+      }
+      // Add any other symbols to token value
+      currentToken->addValue(inputStream->currentChar());
+      inputStream->forward();
+    }
+
+    // End of multi-line comment ritual
+    currentToken->addValue(barhash);
+    inputStream->forward(2);
+  }
+  currentToken->setType("COMMENT");
+  return true;
+}
+
+bool fparen(InputStream *inputStream, Token *currentToken, std::string &currentState) {
+  char cc = inputStream->currentChar();
+  if (cc == '(') {
+    currentToken->set("LEFT_PAREN", cc);
+  } else {
+    currentToken->set("RIGHT_PAREN", cc);
+  }
+  inputStream->forward();
+  return true;
+}
+
+bool fund(InputStream *inputStream, Token *currentToken, std::string &currentState) {
+  currentToken->set("UNDEFINED", inputStream->currentChar());
+  inputStream->forward();
+  return true;
+}
+
 #endif //LEX_ANA_CS236_BYU_DATALOG_H

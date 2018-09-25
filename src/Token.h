@@ -45,6 +45,11 @@ class Token {
   void addValue(char value) {
     v.push_back(value);
   }
+  void addValue(std::string values) {
+    for (char value : values) {
+      v.push_back(value);
+    }
+  }
   void setValue(char value) {
     v = value;
   }

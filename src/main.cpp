@@ -18,11 +18,17 @@ int main(int argc, const char **argv) {
     State("COLON", fcolon),
     State("COMMA", fcomma),
     State("PERIOD", fperiod),
+    State("Q_MARK", fqmark),
+    State("MULTIPLY", fmultiply),
+    State("ADD", fadd),
     State("STRING", fstring),
-    State("IDENTIFIER", fidentifier)
-//    State("COMMENT", fcomment)
+    State("POSSIBLE_STRING_END", fpstring),
+    State("IDENTIFIER", fidentifier),
+    State("COMMENT", fcomment),
+    State("PAREN", fparen),
+    State("UNDEFINED", fund)
   };
   Lexer lexer(inputFileName, states);
-  std::cout << "Token List:" << std::endl << lexer.toString();
+  std::cout << lexer.toString();
   return 0;
 }

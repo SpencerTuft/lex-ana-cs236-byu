@@ -17,9 +17,7 @@ Lexer::Lexer(std::string &fileName, std::vector<State> states)
 
     for (auto &state : states) { // Search for the current state definition
       if (currentState == state.getId()) { // If state definition found
-        tcurrent.setLine(inputStream.currentLine()); // Set the line number where the token starts
-
-        // Run the process associated with this state
+        // Run the function associated with this state
         bool createToken = state.process(&inputStream, &tcurrent, currentState);
         if (createToken) {
           currentState = "START"; // Reset to start state
@@ -32,7 +30,6 @@ Lexer::Lexer(std::string &fileName, std::vector<State> states)
   }
 
   // End of file ritual
-  // TODO - FIX the EOF line number (it's always +1)
   tcurrent.set("EOF", "", inputStream.currentLine());
   tokens.push_back(tcurrent);
 }

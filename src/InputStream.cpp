@@ -6,7 +6,7 @@
 InputStream::InputStream(std::string &fileName) {
   std::ifstream ifs(fileName);
   if (ifs.is_open()) {
-    while (!ifs.eof()) {
+    while (ifs.peek() != EOF) {
       char c;
       ifs.get(c);
       str.push_back(c);
