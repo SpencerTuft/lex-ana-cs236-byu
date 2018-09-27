@@ -3,5 +3,5 @@
 (UNDEFINED,"$",2)
 (RULES,"Rules",3)
 (COLON,":",3)
-(EOF,"",4)
+(EOF,"",3)
 Total Tokens = 6

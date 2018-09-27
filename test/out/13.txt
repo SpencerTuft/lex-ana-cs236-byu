@@ -3,5 +3,5 @@
 (UNDEFINED,"'bad string
 
 ",7)
-(EOF,"",10)
+(EOF,"",9)
 Total Tokens = 4

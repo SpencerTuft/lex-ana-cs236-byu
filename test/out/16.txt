@@ -5,5 +5,5 @@
 (ID,"FactsRules",5)
 (COLON,":",6)
 (COLON_DASH,":-",6)
-(EOF,"",7)
+(EOF,"",6)
 Total Tokens = 8

@@ -14,5 +14,5 @@
 (PERIOD,".",4)
 (COMMENT,"#|comment >=
 wow|#",5)
-(EOF,"",7)
+(EOF,"",6)
 Total Tokens = 16
