@@ -1,0 +1,12 @@
+#!/bin/bash
+EXE_PATH="./cmake-build-debug/lex-ana-cs236-byu"
+IN_PATH="./test/in"
+OUT_PATH="./test/out"
+EXPECTED_PATH="./test/expected"
+
+for i in 10 11 12 13 14 15 16 17 18 19 20 61 62
+do
+    echo "Starting test for file: ${i}.txt"
+    ${EXE_PATH} "${IN_PATH}/${i}.txt" | tee "${OUT_PATH}/${i}.txt"
+    tkdiff ${OUT_PATH}/${i}.txt ${EXPECTED_PATH}/${i}.txt
+done
