@@ -13,7 +13,7 @@
 bool fstart(InputStream &inputStream, Token &currentToken, std::string &currentState) {
   currentToken.setLine(inputStream.currentLine()); // Set line at the beginning of every new token
 
-  char currentChar = inputStream.currentChar();
+  char currentChar = inputStream.get();
 
   // Check for whitespace
   if (isspace(currentChar)) {
@@ -67,7 +67,7 @@ bool fstart(InputStream &inputStream, Token &currentToken, std::string &currentS
 }
 
 bool fcolon(InputStream &inputStream, Token &currentToken, std::string &currentState) {
-  if (inputStream.nextChar() == '-') {
+  if (inputStream.peek() == '-') {
     currentToken.set("COLON_DASH", ":-");
     inputStream.forward(2);
   } else {
@@ -112,19 +112,19 @@ bool fstring(InputStream &inputStream, Token &currentToken, std::string &current
 
   // Current token is a quote
   currentToken.setType("STRING");
-  currentToken.addValue(inputStream.currentChar());
+  currentToken.addValue(inputStream.get());
   inputStream.forward();
 
-  while (inputStream.currentChar() != quote) {
-    if (inputStream.currentChar() == -1) {
+  while (inputStream.get() != quote) {
+    if (inputStream.get() == -1) {
       currentToken.setType("UNDEFINED");
       return true;
     }
-    currentToken.addValue(inputStream.currentChar());
+    currentToken.addValue(inputStream.get());
     inputStream.forward();
   }
 
-  currentToken.addValue(inputStream.currentChar());
+  currentToken.addValue(inputStream.get());
   inputStream.forward();
   currentState = "POSSIBLE_STRING_END";
   return false;
@@ -132,9 +132,7 @@ bool fstring(InputStream &inputStream, Token &currentToken, std::string &current
 
 bool fpstring(InputStream &inputStream, Token &currentToken, std::string &currentState) {
   char quote = '\'';
-  if (inputStream.currentChar() == quote) { // Found an apostrophe
-    currentToken.addValue(quote); // Add a second quote to denote an apostrophe
-    inputStream.forward();
+  if (inputStream.get() == quote) { // Found an apostrophe
     currentState = "STRING"; // Back to the string state
     return false; // Continue without creating string token
   } else { // Found string end
@@ -149,9 +147,9 @@ bool fidentifier(InputStream &inputStream, Token &currentToken, std::string &cur
 
   // Current and all following characters that are letters or numbers
   do {
-    currentToken.addValue(inputStream.currentChar());
+    currentToken.addValue(inputStream.get());
     inputStream.forward();
-  } while (isalnum(inputStream.currentChar()));
+  } while (isalnum(inputStream.get()));
 
   // Check if identifier is a special identifier
   std::string value = currentToken.getValue();
@@ -178,23 +176,23 @@ bool fcomment(InputStream &inputStream, Token &currentToken, std::string &curren
   currentToken.addValue(hash);
   inputStream.forward();
 
-  if (inputStream.currentChar() != bar) { // Is single-line comment
-    while (inputStream.currentChar() != newline && inputStream.currentChar() != end) { // Check for end of line or file
-      currentToken.addValue(inputStream.currentChar());
+  if (inputStream.get() != bar) { // Is single-line comment
+    while (inputStream.get() != newline && inputStream.get() != end) { // Check for end of line or file
+      currentToken.addValue(inputStream.get());
       inputStream.forward();
     }
   } else { // Is multi-line comment
     currentToken.addValue(bar); // Add bar symbol to value
     inputStream.forward();
 
-    while (!(inputStream.currentChar() == bar && inputStream.nextChar() == hash)) {
+    while (!(inputStream.get() == bar && inputStream.peek() == hash)) {
       // Check for end of file
-      if (inputStream.currentChar() == end) {
+      if (inputStream.get() == end) {
         currentToken.setType("UNDEFINED");
         return true;
       }
       // Add any other symbols to token value
-      currentToken.addValue(inputStream.currentChar());
+      currentToken.addValue(inputStream.get());
       inputStream.forward();
     }
 
@@ -207,7 +205,7 @@ bool fcomment(InputStream &inputStream, Token &currentToken, std::string &curren
 }
 
 bool fparen(InputStream &inputStream, Token &currentToken, std::string &currentState) {
-  char cc = inputStream.currentChar();
+  char cc = inputStream.get();
   if (cc == '(') {
     currentToken.set("LEFT_PAREN", cc);
   } else {
@@ -218,7 +216,7 @@ bool fparen(InputStream &inputStream, Token &currentToken, std::string &currentS
 }
 
 bool fund(InputStream &inputStream, Token &currentToken, std::string &currentState) {
-  currentToken.set("UNDEFINED", inputStream.currentChar());
+  currentToken.set("UNDEFINED", inputStream.get());
   inputStream.forward();
   return true;
 }

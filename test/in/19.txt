@@ -6,4 +6,4 @@ Rules Facts Schemes
 'hello
 I am' $ A 'this has a
 Return
-The end''reg near
+The end''s near

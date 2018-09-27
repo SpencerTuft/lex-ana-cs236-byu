@@ -14,21 +14,21 @@ InputStream::InputStream(std::string &fileName) {
 
     ifs.close();
     str.push_back(-1);
-  } else {
-    std::cout << "File not found" << std::endl;
+    r = true;
   }
 }
-char InputStream::currentChar() const {
+char InputStream::get() const {
   return str[charLoc];
 }
-char InputStream::nextChar() const {
+char InputStream::peek() const {
   return str[charLoc+1];
 }
 void InputStream::forward() {
-  charLoc++;
   if (str[charLoc] == '\n') {
     currentLineNum++;
   }
+  charLoc++;
+
 }
 void InputStream::forward(int num) {
   for (int i = 0; i < num; i ++) {
@@ -37,6 +37,12 @@ void InputStream::forward(int num) {
 }
 int InputStream::currentLine() const {
   return currentLineNum;
+}
+int InputStream::currentChar() const {
+  return charLoc;
+}
+bool InputStream::isReady() const {
+  return r;
 }
 std::string InputStream::toString() const {
   return str;
