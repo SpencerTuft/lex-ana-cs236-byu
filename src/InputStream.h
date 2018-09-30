@@ -17,16 +17,20 @@ class InputStream {
   int currentLineNum = 1;
   int charLoc = 0;
  public:
-  InputStream() = default;
-  ~InputStream() = default;
+  explicit InputStream() = default;
   explicit InputStream(std::string& fileName);
+
   char get() const;
   char peek() const;
+
   void forward();
   void forward(int num);
-  int currentLine() const;
-  int currentChar() const;
+
+  int getLineNumber() const;
+  int getCharacterPosition() const;
+
   bool isReady() const;
+
   std::string toString() const;
 };
 

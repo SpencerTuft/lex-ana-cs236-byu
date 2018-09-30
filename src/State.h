@@ -9,19 +9,36 @@
 #include "InputStream.h"
 #include "Token.h"
 
+typedef bool (Process)(InputStream &, Token &, std::string &);
+typedef bool (Route)(char);
+
 class State {
  private:
   std::string id;
-  bool (&f)(InputStream &inputStream, Token &token, std::string &state);
+  Route* r;
+  Process* p;
 
  public:
-  State(std::string identifier, bool (&transition)(InputStream &inputStream, Token &token, std::string &state));
+  explicit State(std::string identifier, Route* route, Process* process)
+      : id(std::move(identifier)), r(route), p(process) {}
 
-  bool process(InputStream &inputStream, Token &currentToken, std::string &currentState) {
-    return this->f(inputStream, currentToken, currentState);
+  bool runProcess(InputStream &inputStream, Token &token, std::string &currentState) {
+    if (p != nullptr) {
+      return (*p)(inputStream, token, currentState);
+    }
+    return false;
+  }
+  
+  bool runRoute(char currentCharacter) {
+    if (r != nullptr) {
+      return (*r)(currentCharacter);
+    }
+    return false;
   }
 
-  std::string getId() { return id; }
+  std::string getId() {
+    return id;
+  }
 };
 
 #endif //LEX_ANA_CS236_BYU_STATE_H

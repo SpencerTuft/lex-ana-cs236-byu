@@ -35,10 +35,10 @@ void InputStream::forward(int num) {
     forward();
   }
 }
-int InputStream::currentLine() const {
+int InputStream::getLineNumber() const {
   return currentLineNum;
 }
-int InputStream::currentChar() const {
+int InputStream::getCharacterPosition() const {
   return charLoc;
 }
 bool InputStream::isReady() const {

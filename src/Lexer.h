@@ -8,20 +8,25 @@
 #include <functional>
 #include <vector>
 #include <iostream>
+#include <map>
 
 #include "Token.h"
 #include "State.h"
 #include "InputStream.h"
 
+typedef std::map<std::string, State> States;
+
 class Lexer {
  private:
-  std::string currentState = "START";
   InputStream inputStream;
-  Token tcurrent;
+  Token currentToken = Token(inputStream.getLineNumber());
   std::vector<Token> tokens;
+  std::string currentState = "START";
+  States states;
 
  public:
-  explicit Lexer(std::string& fileName, std::vector<State> states);
+  explicit Lexer(std::string &fileName, std::vector<State> inputStates);
+  void analyze();
   std::string toString();
 };
 

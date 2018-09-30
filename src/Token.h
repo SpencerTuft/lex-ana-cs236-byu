@@ -15,25 +15,8 @@ class Token {
   std::string v = ""; // the value of the token
   int l = 0; // the token starting line number
  public:
-  Token() = default;
-  Token(int lineNumber)
-      : l(lineNumber) {}
-  Token(std::string &type, char &input)
-      : t(type) {
-    this->addValue(input);
-  };
-  Token(std::string &type, std::string &input)
-      : t(type) {
-    v = input;
-  };
-  Token(std::string &type, char &input, int line)
-      : t(type), l(line) {
-    this->addValue(input);
-  };
-  Token(std::string &type, std::string &input, int line)
-      : t(type), l(line) {
-    v = input;
-  };
+  explicit Token() = default;
+  explicit Token(int lineNumber) : l(lineNumber) {}
 
   // ************ SETTERS ************
   void setLine(int lineNumber) {
@@ -79,6 +62,9 @@ class Token {
   // ************ GETTERS ************
   std::string getValue() const {
     return v;
+  }
+  int getLineNumber() const {
+    return l;
   }
   std::string toString() const {
     return "(" + t + ",\"" + v + "\"," + std::to_string(l) + ")";
