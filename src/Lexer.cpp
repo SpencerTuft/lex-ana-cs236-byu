@@ -80,7 +80,7 @@ std::string Lexer::toString() {
       ss << std::endl;
     }
 
-    ss << "Total Tokens = " << tokens.size() << std::endl;
+    ss << "Total Tokens = " << tokens.size();
 
     return ss.str();
   } else {

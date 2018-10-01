@@ -25,4 +25,3 @@
 (PERIOD,".",6)
 (EOF,"",7)
 Total Tokens = 26
-

@@ -18,4 +18,3 @@
 (STRING,"' '",12)
 (EOF,"",14)
 Total Tokens = 19
-
