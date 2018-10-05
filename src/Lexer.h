@@ -18,16 +18,17 @@ typedef std::map<std::string, State> States;
 
 class Lexer {
  private:
-  InputStream inputStream;
-  Token currentToken = Token(inputStream.getLineNumber());
-  std::vector<Token> tokens;
+  bool lexerReady = false;
   std::string currentState = "START";
-  States states;
+  Token ttemp;
+  std::vector<Token> tokens;
+  int tcursor = 0;
 
  public:
   explicit Lexer(std::string &fileName, std::vector<State> inputStates);
-  void analyze();
   std::string toString();
+  Token getToken();
+  void advance();
 };
 
 #endif //LEX_ANA_CS236_BYU_Lexer_H

@@ -34,7 +34,6 @@ int main(int argc, const char *argv[]) {
 
   std::string inputFileName = std::string(fileName);
   Lexer lexer(inputFileName, states);
-  lexer.analyze();
   std::cout << lexer.toString() << std::endl;
   return 0;
 }

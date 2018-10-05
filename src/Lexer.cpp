@@ -29,23 +29,29 @@ std::string route(InputStream inputStream, States states, std::string &currentSt
 
 Lexer::Lexer(std::string &fileName, std::vector<State> inputStates) {
   // Initialize input stream
-  inputStream = InputStream(fileName);
+  InputStream inputStream = InputStream(fileName);
 
   // Initialize states map
+  States states;
+
+  // Start state is assumed in every lexer
   states.emplace("START", State("START", nullptr, pstart));
+
+  // Map custom input states
   for (auto &state : inputStates) {
     states.emplace(state.getId(), state);
   }
-}
 
-void Lexer::analyze() {
+  // Initialize current Token
+  ttemp = Token(inputStream.getLineNumber());
+
   // Check input stream load orl korrect
   if (!inputStream.isReady()) {
     std::cout << "No input stream loaded" << std::endl;
     return;
   }
 
-  // Process one character at a time till the end of file
+  // Analyze the input file one character at a time till the end of file
   while (inputStream.get() != -1) {
 
     // State Router/Switch
@@ -56,22 +62,28 @@ void Lexer::analyze() {
     // Run process of current state
     bool storeToken = states
         .at(currentState)
-        .runProcess(inputStream, currentToken, currentState);
+        .runProcess(inputStream, ttemp, currentState);
 
     // Save token and reset
     if (storeToken) {
-      tokens.push_back(currentToken); // Store token in the tokens list
-      currentToken = Token(inputStream.getLineNumber()); // Reset the current token
+      tokens.push_back(ttemp); // Store token in the tokens list
+      ttemp = Token(inputStream.getLineNumber()); // Reset the current token
     }
   }
 
   // End of file ritual
-  currentToken.set("EOF", "", inputStream.getLineNumber());
-  tokens.push_back(currentToken);
+  ttemp.set("EOF", "", inputStream.getLineNumber());
+  tokens.push_back(ttemp);
+
+  // Set current token to the first token in the array
+  ttemp = tokens[0];
+
+  // End of initializations
+  lexerReady = true;
 }
 
 std::string Lexer::toString() {
-  if (inputStream.isReady()) {
+  if (lexerReady) {
     std::stringstream ss;
     int listLength = static_cast<int>(tokens.size());
 
@@ -86,4 +98,12 @@ std::string Lexer::toString() {
   } else {
     return "";
   }
+}
+
+Token Lexer::getToken() {
+  return tokens[tcursor];
+}
+
+void Lexer::advance() {
+  tcursor++;
 }
